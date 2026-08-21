@@ -119,7 +119,7 @@ W tym konkretnym przypadku do analizy danych w PowerBI najlepiej użyć DirectQu
 
 Jeśli interesuje nas głównie jakiś okres czasu to (próbka, np. ostatnie 2-3 lata) to można również użyć odpowiedniego zapytania SQL, aby wygenerować odpowiednie dane oraz zaimportować je do bezpośrednio do PowerBI, do głębokiej analizy.
 
-Plik .pdf dotyczący wizualizacji wszystkich danych w PowerBI jest dostępny wyżej do pobrania.
+Plik .pdf dotyczący wizualizacji wszystkich danych w PowerBI jest dostępny wyżej. Należy po prostu w niego kliknąć lub go pobrać.
 
 ---
 
