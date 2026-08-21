@@ -12,12 +12,12 @@ Link do zbioru danych:
 ---
 ## Przed Analizą
 ### Sprawdzam wielkość pliku oraz ilość wierszy
-![1.png](assets\1.png)
+![1.png](assets/1.png)
 ```sql
 SELECT COUNT(*) AS total_rows
 FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`;
 ```
-![2.png](assets\2.png)
+![2.png](assets/2.png)
 
 ### Sprawdzam, czy dane posiadają odpowiednie wartości
 ```sql
@@ -25,7 +25,7 @@ SELECT COUNT(*) AS missing_fare
 FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`
 WHERE fare IS NULL OR fare <= 0;
 ```
-![3.png](assets\3.png)
+![3.png](assets/3.png)
 
 Wartość fare oznacza opłatę należną za przejazd taksówką. W naszym przykładzie tylko poniżej 1% wszystkich wartości danej kolumny jest nieprawidłowa. 
 
@@ -39,7 +39,9 @@ COUNTIF(trip_miles > 0) AS valid_trip_miles,
 COUNTIF(fare > 0) AS valid_fare
 FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`;
 ```
-![4.png](assets\4.png)
+![4.png](assets/4.png)
+
+W niektórych przypadkach warto również sprawdzić pojawianie się duplikatów.
 
 ---
 
@@ -54,7 +56,7 @@ GROUP BY area
 ORDER BY trips DESC
 LIMIT 5;
 ```
-![5.png](assets\5.png)
+![5.png](assets/5.png)
 
 ### Godziny szczytu, rok 2022
 Należy uwazać na strefę czasową, domyślnie czas jest pokazywany w UTC.
@@ -67,7 +69,7 @@ WHERE EXTRACT(YEAR FROM trip_start_timestamp AT TIME ZONE 'America/Chicago') = 2
 GROUP BY hour
 ORDER BY trips DESC;
 ```
-![9.png](assets\9.png)
+![9.png](assets/9.png)
 
 ### Średnia, przybliżona mediana, odchylenie standardowe dla poszczególnych lat
 ```sql
@@ -106,9 +108,9 @@ AND fare > 0
 GROUP BY year
 ORDER BY year;
 ```
-![8.png](assets\8.png)
+![8.png](assets/8.png)
 
-![7.png](assets\7.png)
+![7.png](assets/7.png)
 
 ---
 
