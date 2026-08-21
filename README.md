@@ -1,17 +1,18 @@
 # Analiza danych w Google BigQuery
 
-Korzystając z dostępu do zbioru danych w Google Bigquery dotyczących podróży taksówkami w Chicago dokonałem analizy:
+Korzystając z dostępu do zbioru danych dotyczących podróży taksówkami w Chicago w Google BigQuery przeprowadziłem analizę, w której:
 - sprawdziłem co zawiera zbiór danych
-- oceniłem i zweryfikowałem jego jakość
-- wyciągnałem wnioski oraz rekomendacje dla biznesu
-- używałem zapytań  SQL
+- oceniłem jakość danych
+- sformułowałem wnioski i rekomendacje biznesowe
+- wykorzystałem zapytania SQL do analizy danych
   
 Link do zbioru danych:
 - https://console.cloud.google.com/marketplace/product/city-of-chicago-public-data/chicago-taxi-trips
 
 ---
-## Przed Analizą
-### Sprawdzam wielkość pliku oraz ilość wierszy
+## Przed analizą
+### Sprawdzam rozmiar zbioru danych oraz liczbę wierszy
+
 ![1.png](assets/1.png)
 ```sql
 SELECT COUNT(*) AS total_rows
@@ -19,7 +20,7 @@ FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`;
 ```
 ![2.png](assets/2.png)
 
-### Sprawdzam, czy dane posiadają odpowiednie wartości
+### Sprawdzam, czy kolumna `fare` zawiera poprawne wartości
 ```sql
 SELECT COUNT(*) AS missing_fare
 FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`
@@ -27,7 +28,7 @@ WHERE fare IS NULL OR fare <= 0;
 ```
 ![3.png](assets/3.png)
 
-Wartość fare oznacza opłatę należną za przejazd taksówką. W naszym przykładzie tylko poniżej 1% wszystkich wartości danej kolumny jest nieprawidłowa. 
+Kolumna `fare` oznacza opłatę za przejazd taksówką. W analizowanym zbiorze nieprawidłowe wartości stanowią mniej niż 1% wszystkich rekordów.
 
 ### Sprawdzam więcej kolumn jednym zapytaniem
 ```sql
@@ -41,7 +42,7 @@ FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`;
 ```
 ![4.png](assets/4.png)
 
-W niektórych przypadkach warto również sprawdzić pojawianie się duplikatów.
+Warto również sprawdzić, czy w zbiorze występują duplikaty.
 
 ---
 
@@ -58,8 +59,8 @@ LIMIT 5;
 ```
 ![5.png](assets/5.png)
 
-### Godziny szczytu, rok 2022
-Należy uwazać na strefę czasową, domyślnie czas jest pokazywany w UTC.
+### Liczba przejazdów według godziny, rok 2022
+Należy zwrócić uwagę na strefę czasową. Dane czasowe są przedstawione w UTC, dlatego przed analizą godzinową należy uwzględnić czas lokalny Chicago.
 ```sql
 SELECT
 EXTRACT(HOUR FROM trip_start_timestamp AT TIME ZONE 'America/Chicago') AS hour,
@@ -71,7 +72,7 @@ ORDER BY trips DESC;
 ```
 ![9.png](assets/9.png)
 
-### Średnia, przybliżona mediana, odchylenie standardowe dla poszczególnych lat
+### Średnia, przybliżona mediana i odchylenie standardowe w poszczególnych latach
 ```sql
 SELECT
 EXTRACT(YEAR FROM trip_start_timestamp) AS year,
@@ -115,22 +116,24 @@ ORDER BY year;
 ---
 
 ## Google PowerQuery → Power BI (DirectQuery)
-W tym konkretnym przypadku do analizy danych w PowerBI najlepiej użyć DirectQuery zamiast klasycznego importa danych. Dane nie znajdują się bezpośrednio lokalnie na komputerze, a Power BI jest bezpiecznie połączony i korzysta z konkretnych danych tylko jeśli potrzeba. Niektóre kolumny w tej bazie danych zawierają w większości puste wartości. Dla lepszego performance należy takie kolumny pominąć tworząc odpowiednie zapytanie podczas nawiązywania połączenia DirectQuery z bazą danych.
+W tym przypadku do analizy danych w Power BI można wykorzystać tryb DirectQuery zamiast klasycznego importu danych. W trybie DirectQuery dane pozostają w źródle, a Power BI wysyła zapytania do bazy danych w momencie wykonywania analizy. Dzięki temu nie ma potrzeby importowania całego zbioru danych do pamięci Power BI. 
 
-Jeśli interesuje nas głównie jakiś okres czasu to (próbka, np. ostatnie 2-3 lata) to można również użyć odpowiedniego zapytania SQL, aby wygenerować odpowiednie dane oraz zaimportować je do bezpośrednio do PowerBI, do głębokiej analizy.
+Niektóre kolumny w tej bazie danych zawierają w większości puste wartości. Dla poprawy wydajności warto pominąć nieużywane kolumny, tworząc odpowiednio przygotowane zapytanie SQL.
 
-Plik .pdf dotyczący wizualizacji wszystkich danych w PowerBI jest dostępny wyżej. Należy po prostu w niego kliknąć lub go pobrać.
+Jeśli interesuje nas głównie jakiś okres czasu to (próbka, np. ostatnie 2-3 lata) to można również użyć odpowiedniego zapytania SQL, aby wygenerować odpowiednie dane oraz zaimportować je bezpośrednio do Power BI, do szczegółowej analizy.
+
+Plik .pdf dotyczący wizualizacji wszystkich danych w Power BI jest dostępny wyżej. Należy po prostu w niego kliknąć lub go pobrać.
 
 ---
 
 ## Wnioski i rekomendacje
-Analiza cenowa: Utrzymać ceny konkurencyjne latem, a zimą rozważyć promocje (np. rabaty na nocne kursy), żeby przyciągnąć klientów mimo słabszego popytu.
+**Analiza cenowa:** Utrzymać ceny konkurencyjne latem, a zimą rozważyć promocje (np. rabaty na nocne kursy), żeby przyciągnąć klientów mimo słabszego popytu.
 
-Optymalizacja tras i harmonogramów: Skoncentrować taksówki w najbardziej ruchliwych obszarach (Area 8 to Near North Side) szczególnie w godzinach szczytu (03:00 - 13:00). Zapewnienie gotowości w dzielnicach generujących najwięcej postojów zwiększy liczbę zleceń.
-git
-Segmentacja klientów: Wykorzystać fakt, że głównie centra biznesowe i turystyczne generują kursy – można kierować tam reklamy internetowe lub zniżki lojalnościowe dla podróżujących biznesmenów i turystów.
+**Optymalizacja tras i harmonogramów:** Skoncentrować taksówki w najbardziej ruchliwych obszarach (Area 8 to Near North Side) szczególnie w godzinach szczytu (03:00 - 13:00). Zapewnienie gotowości w dzielnicach generujących najwięcej postojów zwiększy liczbę zleceń.
 
-Kontrola kosztów: Obserwować firmy liderów (Taxi Affiliation Services itp.) – jeśli oferują dodatkowe usługi (np. lepsze warunki płatności kartą czy promocje).
+**Segmentacja klientów:** Skupić działania marketingowe na obszarach generujących największą liczbę przejazdów. W przypadku obszarów biznesowych i turystycznych można rozważyć kampanie skierowane do osób podróżujących służbowo oraz turystów.
+
+**Analiza konkurencji:** Monitorować firmy posiadające największy udział w liczbie realizowanych przejazdów, takie jak Taxi Affiliation Services oraz analizować ich ofertę i stosowane rozwiązania.
 
 ---
 
