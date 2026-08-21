@@ -7,7 +7,7 @@ Korzystając z dostępu do zbioru danych w Google Bigquery dotyczących podróż
 - używałem zapytań  SQL
   
 Link do zbioru danych:
-https://console.cloud.google.com/marketplace/product/city-of-chicago-public-data/chicago-taxi-trips
+- https://console.cloud.google.com/marketplace/product/city-of-chicago-public-data/chicago-taxi-trips
 
 ---
 ## Przed Analizą
@@ -40,6 +40,8 @@ COUNTIF(fare > 0) AS valid_fare
 FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`;
 ```
 ![4.png](assets\4.png)
+
+---
 
 ## Analiza
 
@@ -123,7 +125,7 @@ Plik .pdf dotyczący wizualizacji wszystkich danych w PowerBI jest dostępny wy�
 Analiza cenowa: Utrzymać ceny konkurencyjne latem, a zimą rozważyć promocje (np. rabaty na nocne kursy), żeby przyciągnąć klientów mimo słabszego popytu.
 
 Optymalizacja tras i harmonogramów: Skoncentrować taksówki w najbardziej ruchliwych obszarach (Area 8 to Near North Side) szczególnie w godzinach szczytu (03:00 - 13:00). Zapewnienie gotowości w dzielnicach generujących najwięcej postojów zwiększy liczbę zleceń.
-
+git
 Segmentacja klientów: Wykorzystać fakt, że głównie centra biznesowe i turystyczne generują kursy – można kierować tam reklamy internetowe lub zniżki lojalnościowe dla podróżujących biznesmenów i turystów.
 
 Kontrola kosztów: Obserwować firmy liderów (Taxi Affiliation Services itp.) – jeśli oferują dodatkowe usługi (np. lepsze warunki płatności kartą czy promocje).
@@ -132,8 +134,5 @@ Kontrola kosztów: Obserwować firmy liderów (Taxi Affiliation Services itp.) �
 
 ## Co jeśli tych danych będzie 10 razy więcej?
 
-## Skalowanie do większych zbiorów
+### Skalowanie do większych zbiorów
 Jeśli dane byłyby **10 razy większe**, nadal da się je analizować BigQuery, ale trzeba zastosować dodatkowe optymalizacje. Przede wszystkim warto **partycjonować tabelę**, np. po dacie kursu, co pozwoli czytać tylko pasujące partycje zamiast całej tabeli. Można też **klastrować** tabelę po kluczowych kolumnach (np. po obszarze community), co przyspieszy filtrowanie wielowymiarowe. Pozwala to znacząco ograniczyć ilość danych przetwarzanych w zapytaniu. Dodatkowe kroki to korzystanie z **próbkowania** danych i optymalizacja samego zapytania. Jeśli BigQuery jest niewystarczające, można sięgnąć również po inne narzędzia.
-
----
-
